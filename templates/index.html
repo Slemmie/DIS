@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>My Webpage</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problem List</title>
 </head>
 <body>
-    <ul id="problems">
-    {% for item in problems %}
-        <p>problem: {{ item.name}}, id: {{item.id}} </p>
-    {% endfor %}
+    <h1>Problem List</h1>
+    <form action="/problems/" method="get">
+        <label for="rating_lower_bound">Rating Lower Bound:</label>
+        <input type="number" id="rating_lower_bound" name="rating_lower_bound">
+        <label for="rating_upper_bound">Rating Upper Bound:</label>
+        <input type="number" id="rating_upper_bound" name="rating_upper_bound">
+        <button type="submit">Filter</button>
+    </form>
+    <ul>
+        {% for problem in problems %}
+            <li>{{ problem.name }} (ID: {{ problem.id }}, Rating: {{ problem.rating }})</li>
+        {% endfor %}
     </ul>
-
-    {# a comment #}
 </body>
 </html>
