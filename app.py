@@ -6,9 +6,13 @@ app = Flask(__name__)
 
 conn = psycopg2.connect(db)
 
-@app.route('/')
-def hello():
-    return "Hello World!"
+def all_tags():
+    cur = conn.cursor()
+    sql = "SELECT DISTINCT tag FROM problems"
+    cur.execute(sql)
+    tags = cur.fetchall()
+    cur.close()
+    return [tag[0] for tag in tags]
 
 def select_problems(tags, rating_lower_bound, rating_upper_bound):
     cur = conn.cursor()
@@ -23,7 +27,6 @@ def select_problems(tags, rating_lower_bound, rating_upper_bound):
         constraints.append(con)
     if constraints:
         sql += " WHERE " + " AND ".join(constraints)
-    print(sql)
     cur.execute(sql)
     result = cur.fetchall()
     problems = [Problem(problem) for problem in result]
@@ -41,12 +44,13 @@ class Problem:
         index = self.id[letter_index:]
         self.link = f"https://codeforces.com/problemset/problem/{contest_id}/{index}"
 
-@app.route('/problems/', methods=['GET'])
+@app.route('/', methods=['GET'])
 def problem_list():
     rating_lower_bound = request.args.get('rating_lower_bound', type=int)
     rating_upper_bound = request.args.get('rating_upper_bound', type=int)
-    problems = select_problems(["bitmasks", "greedy"], rating_lower_bound, rating_upper_bound)
-    return render_template('index.html', problems=problems)
+    selected_tags = request.args.getlist('tags')
+    problems = select_problems(selected_tags, rating_lower_bound, rating_upper_bound)
+    return render_template('index.html', problems=problems, possible_tags=all_tags())
 
 if __name__ == "__main__":
     app.run(debug=True, port=port)
