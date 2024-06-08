@@ -111,6 +111,7 @@
 
         <button type="submit">Filter</button>
     </form>
+	<p>{{ problems|length }} problems matched the search.</p>
     <ul>
         {% for problem in problems %}
 			<li><a href="{{ problem.link }}">{{ problem.name }}</a> (ID: {{ problem.id }}, Rating: {{ problem.rating }})</li>
