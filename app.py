@@ -1,10 +1,9 @@
 from flask import Flask, render_template, request
 import psycopg2
+from config import db, port
 
 app = Flask(__name__)
 
-# set your own database
-db = "dbname='postgres' user='postgres' host='127.0.0.1' password = '123'"
 conn = psycopg2.connect(db)
 
 @app.route('/')
@@ -46,4 +45,4 @@ def problem_list():
     return render_template('index.html', problems=problems)
 
 if __name__ == "__main__":
-    app.run(debug=True, port=7000)
+    app.run(debug=True, port=port)
