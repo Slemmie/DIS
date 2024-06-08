@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import psycopg2
+import re
 from config import db, port
 
 app = Flask(__name__)
@@ -8,7 +9,7 @@ conn = psycopg2.connect(db)
 
 def all_tags():
     cur = conn.cursor()
-    sql = "SELECT DISTINCT tag FROM problems"
+    sql = "SELECT DISTINCT tag FROM problems ORDER BY tag"
     cur.execute(sql)
     tags = cur.fetchall()
     cur.close()
@@ -16,7 +17,7 @@ def all_tags():
 
 def select_problems(tags, rating_lower_bound, rating_upper_bound):
     cur = conn.cursor()
-    sql = "SELECT name, id, rating FROM problems"
+    sql = "SELECT DISTINCT name, id, rating FROM problems"
     constraints = []
     if rating_upper_bound:
         constraints.append(f"rating <= {rating_upper_bound}")
@@ -48,8 +49,11 @@ class Problem:
 def problem_list():
     rating_lower_bound = request.args.get('rating_lower_bound', type=int)
     rating_upper_bound = request.args.get('rating_upper_bound', type=int)
+    regex = request.args.get('regex', type=str)
     selected_tags = request.args.getlist('tags')
     problems = select_problems(selected_tags, rating_lower_bound, rating_upper_bound)
+    if regex:
+        problems = [problem for problem in problems if re.search(regex, problem.name)]
     return render_template('index.html', problems=problems, possible_tags=all_tags())
 
 if __name__ == "__main__":
