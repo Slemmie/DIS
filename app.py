@@ -13,6 +13,7 @@ def all_tags():
     cur.execute(sql)
     tags = cur.fetchall()
     cur.close()
+    # Convert from 1-tuples to string
     return [tag[0] for tag in tags]
 
 def select_problems(tags, rating_lower_bound, rating_upper_bound):
@@ -25,6 +26,7 @@ def select_problems(tags, rating_lower_bound, rating_upper_bound):
         constraints.append(f"rating >= {rating_lower_bound}")
     if tags:
         con = "tag IN (" + ', '.join(f"\'{tag}\'" for tag in tags) + f") GROUP BY name, id, rating HAVING COUNT (DISTINCT tag) = {len(tags)}"
+        # fx "WHERE tag IN ('dp', 'math') GROUP BY name, id, rating HAVING COUNT (DISTINCT tag) = 2"
         constraints.append(con)
     if constraints:
         sql += " WHERE " + " AND ".join(constraints)
@@ -52,9 +54,13 @@ def problem_list():
     regex = request.args.get('regex', type=str)
     selected_tags = request.args.getlist('tags')
     problems = select_problems(selected_tags, rating_lower_bound, rating_upper_bound)
+    regex_invalid = False
     if regex:
-        problems = [problem for problem in problems if re.search(regex, problem.name)]
-    return render_template('index.html', problems=problems, possible_tags=all_tags())
+        try:
+            problems = [problem for problem in problems if re.search(regex, problem.name)]
+        except re.error:
+            regex_invalid = True
+    return render_template('index.html', problems=problems, possible_tags=all_tags(), regex_invalid=regex_invalid)
 
 if __name__ == "__main__":
     app.run(debug=True, port=port)

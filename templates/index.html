@@ -94,6 +94,9 @@
         <br></br>
         <label for="regex">Regex Filter:</label>
         <input type="string" id="regex" name="regex" value="{{ request.args.get('regex', '') }}">
+        {% if regex_invalid %}
+            <div>Invalid Regex</div>
+        {% endif %}
 
 		<br><br>
 		<div class="dropdown">
