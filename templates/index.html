@@ -27,8 +27,13 @@
     <form action="/" method="get">
         <label for="rating_lower_bound">Rating Lower Bound:</label>
         <input type="number" id="rating_lower_bound" name="rating_lower_bound" step="100" min="800" max="3500" value="{{ request.args.get('rating_lower_bound', '800') }}" oninput="validate_bounds()">
+        <br></br>
         <label for="rating_upper_bound">Rating Upper Bound:</label>
         <input type="number" id="rating_upper_bound" name="rating_upper_bound" step="100" min="800" max="3500" value="{{ request.args.get('rating_upper_bound', '3500') }}" oninput="validate_bounds_inverse()">
+        <br></br>
+        <label for="regex">Regex Filter:</label>
+        <input type="string" id="regex" name="regex" value="{{ request.args.get('regex', '') }}">
+        <br></br>
         <fieldset>
             <legend>Select Tags:</legend>
             {% for tag in possible_tags %}
