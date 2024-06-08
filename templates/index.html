@@ -16,7 +16,7 @@
     </form>
     <ul>
         {% for problem in problems %}
-            <li>{{ problem.name }} (ID: {{ problem.id }}, Rating: {{ problem.rating }})</li>
+			<li><a href="{{ problem.link }}">{{ problem.name }}</a> (ID: {{ problem.id }}, Rating: {{ problem.rating }})</li>
         {% endfor %}
     </ul>
 </body>

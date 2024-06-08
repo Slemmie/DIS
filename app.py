@@ -36,6 +36,10 @@ class Problem:
         self.name = data[0]
         self.id = data[1]
         self.rating = data[2]
+        letter_index = next(i for i, c in enumerate(self.id) if not c.isdigit())
+        contest_id = self.id[:letter_index]
+        index = self.id[letter_index:]
+        self.link = f"https://codeforces.com/problemset/problem/{contest_id}/{index}"
 
 @app.route('/problems/', methods=['GET'])
 def problem_list():
