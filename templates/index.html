@@ -4,14 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Problem List</title>
+	<script>
+		function validate_bounds() {
+			const lowerBound = document.getElementById('rating_lower_bound');
+			const upperBound = document.getElementById('rating_upper_bound');
+			if (parseInt(lowerBound.value) > parseInt(upperBound.value)) {
+				upperBound.value = lowerBound.value;
+			}
+		}
+
+		function validate_bounds_inverse() {
+			const lowerBound = document.getElementById('rating_lower_bound');
+			const upperBound = document.getElementById('rating_upper_bound');
+			if (parseInt(upperBound.value) < parseInt(lowerBound.value)) {
+				lowerBound.value = upperBound.value;
+			}
+		}
+	</script>
 </head>
 <body>
     <h1>Problem List</h1>
     <form action="/problems/" method="get">
         <label for="rating_lower_bound">Rating Lower Bound:</label>
-        <input type="number" id="rating_lower_bound" name="rating_lower_bound">
+        <input type="number" id="rating_lower_bound" name="rating_lower_bound" step="100" min="800" max="3500" value="800" oninput="validate_bounds()">
         <label for="rating_upper_bound">Rating Upper Bound:</label>
-        <input type="number" id="rating_upper_bound" name="rating_upper_bound">
+        <input type="number" id="rating_upper_bound" name="rating_upper_bound" step="100" min="800" max="3500" value="3500" oninput="validate_bounds_inverse()">
         <button type="submit">Filter</button>
     </form>
     <ul>
