@@ -5,3 +5,8 @@
 3. Create a new database in PostgreSQL, fill out the information in `config.py`.
 4. Run the `setup.py` script to automatically fill out the database with the data found in the `data` directory, i.e. `$ python3 setup.py`.
 5. To launch the application, run `$ python3 app.py` in the terminal.
+
+## Formalities
+Thor Vejen Eriksen - nkj858
+
+Asbjørn Lind - nvr136
